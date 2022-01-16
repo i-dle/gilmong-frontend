@@ -1,22 +1,34 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as FillHeart } from "../../assets/FillHeart.svg";
 import { ReactComponent as NotFillHeart } from "../../assets/NotFillHeart.svg";
+import { setInterested } from "../../utils/api/job";
 
 interface LoadMapPostProps {
   title: string;
   description: string;
-  isHeart: boolean;
+  interest: boolean;
 }
 
 const LoadMapPost: React.FC<LoadMapPostProps> = (props) => {
-  const { title, description, isHeart } = props;
+  const { title, description, interest } = props;
+  const [isInterest, setInterest] = useState(interest);
   return (
     <LoadMapPostBox>
-      <LoadMapText>
+      <LoadMapText to="/process">
         <h2>{title}</h2>
         <h3>{description}</h3>
       </LoadMapText>
-      <HeartBox>{isHeart ? <FillHeart /> : <NotFillHeart />}</HeartBox>
+      <HeartBox
+        onClick={() => {
+          setInterest(!isInterest);
+          const response = setInterested(title);
+          console.log(response);
+        }}
+      >
+        {isInterest ? <FillHeart /> : <NotFillHeart />}
+      </HeartBox>
     </LoadMapPostBox>
   );
 };
@@ -29,7 +41,7 @@ const LoadMapPostBox = styled.div`
   justify-content: space-between;
   display: flex;
 `;
-const LoadMapText = styled.div`
+const LoadMapText = styled(Link)`
   display: flex;
   justify-content: center;
   flex-direction: column;
