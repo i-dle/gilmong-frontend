@@ -1,20 +1,34 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-
+import Icon from "../../assets/Icon.svg";
+import { modalState } from "../../recoil/modalState";
 const Header = () => {
+  const setModalData = useSetRecoilState(modalState);
   return (
     <HeaderBox>
-      <IconBox></IconBox>
+      <IconBox to="/"></IconBox>
       <NavigationWrapper>
-        <a>자유게시판</a>
-        <a>로드맵</a>
-        <a>관심로드맵</a>
+        <Link to="/">자유게시판</Link>
+        <Link to="/">로드맵</Link>
+        <Link to="/">관심로드맵</Link>
       </NavigationWrapper>
-      <AuthBox>
-        <a>login</a>
-        <p>|</p>
-        <a>join</a>
-      </AuthBox>
+      {localStorage.getItem("accessToken") ? (
+        <Name>기무딱찬님</Name>
+      ) : (
+        <AuthBox>
+          <p
+            onClick={() => setModalData({ isModal: true, modalType: "login" })}
+          >
+            login
+          </p>
+          <p>|</p>
+          <p onClick={() => setModalData({ isModal: true, modalType: "join" })}>
+            join
+          </p>
+        </AuthBox>
+      )}
     </HeaderBox>
   );
 };
@@ -38,10 +52,12 @@ const NavigationWrapper = styled.div`
   }
 `;
 
-const IconBox = styled.div`
-  width: 231px;
-  height: 80px;
-  background-color: black;
+const IconBox = styled(Link)`
+  width: 61px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url(${Icon});
 `;
 
 const AuthBox = styled.div`
@@ -52,7 +68,13 @@ const AuthBox = styled.div`
     color: #767676;
     font-weight: 400;
     font-size: 15px;
+    cursor: pointer;
   }
+`;
+const Name = styled.div`
+  color: #191919;
+  font-weight: 700;
+  font-size: 15px;
 `;
 
 export default Header;
